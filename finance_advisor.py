@@ -3,9 +3,13 @@ import os
 import threading
 import customtkinter as ctk
 from openai import OpenAI
+from dotenv import load_dotenv
 
-API_KEY  = "sk-2ab5081b0ab97068153429269c971c1df4df1cf019290e47"
-BASE_URL = "https://api.ilmu.ai/v1"
+
+load_dotenv()
+
+API_KEY = os.getenv("ILMU_API_KEY")
+BASE_URL = os.getenv("ILMU_BASE_URL", "https://api.ilmu.ai/v1")
 MODEL    = "ilmu-glm-5.1"
 
 SAVE_FILE = os.path.join(os.path.expanduser("~"), "finance_advisor_data.json")

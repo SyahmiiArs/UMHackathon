@@ -43,8 +43,8 @@ def get_finance_advice(user_data: dict) -> dict:
 
     try:
         client = Anthropic(
-    api_key="sk-2ab5081b0ab97068153429269c971c1df4df1cf019290e47",
-    base_url="https://api.ilmu.ai/anthropic"
+    api_key=os.getenv("ILMU_API_KEY"),
+    base_url=os.getenv("ILMU_BASE_URL", "https://api.ilmu.ai/anthropic")
 )
         response = client.messages.create(
             model="ilmu-glm-5.1",
