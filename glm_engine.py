@@ -48,7 +48,7 @@ def get_finance_advice(user_data: dict) -> dict:
 )
         response = client.messages.create(
             model="ilmu-glm-5.1",
-            max_tokens=2000,
+            max_tokens=1500,
             system=SYSTEM_PROMPT,
             messages=[{"role": "user", "content": user_message}]
         )
