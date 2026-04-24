@@ -243,7 +243,22 @@ class FinanceAdvisorApp(ctk.CTk):
                     "Vacation", "Education", "Retirement", "Investment", "Other"],
             font=ctk.CTkFont(size=12)
         )
-        self.goal_purpose.pack(fill="x", padx=10, pady=(4, 12))
+        self.goal_purpose.pack(fill="x", padx=10, pady=(4, 8))
+
+        # Goal status label
+        self.goal_status = ctk.CTkLabel(goal_f, text="",
+                                        font=ctk.CTkFont(size=11), text_color="gray")
+        self.goal_status.pack(anchor="w", padx=10, pady=(0, 2))
+
+        # Goal Update button (grey)
+        ctk.CTkButton(
+            goal_f,
+            text="💾  Update Goal",
+            fg_color="gray40",
+            hover_color="gray30",
+            font=ctk.CTkFont(size=13),
+            command=self._update_goal
+        ).pack(fill="x", padx=10, pady=(4, 12))
 
         # ── Action Buttons ───────────────────
         btn_f = ctk.CTkFrame(p, fg_color="transparent")
@@ -354,6 +369,15 @@ class FinanceAdvisorApp(ctk.CTk):
                 self._set_entry(entry, expenses.get(key, ""))
             self.expenses_status.configure(
                 text=f"✅ Expenses loaded from saved data", text_color="green")
+            
+        goal = self._saved_data.get("goal", {})
+        if goal:
+            self._set_entry(self.goal_amount, goal.get("amount", ""))
+            self._set_entry(self.goal_months, goal.get("months", ""))
+            if goal.get("purpose"):
+                self.goal_purpose.set(goal["purpose"])
+            self.goal_status.configure(
+                text="✅ Goal loaded from saved data", text_color="green")
 
     def _update_income(self):
         """Save current income fields to disk."""
@@ -397,6 +421,27 @@ class FinanceAdvisorApp(ctk.CTk):
         )
         self.after(4000, lambda: self.expenses_status.configure(
             text="💾 Expenses data saved", text_color="gray"))
+
+    def _update_goal(self):
+        """Save current goal fields to disk."""
+        goal_data = {
+            "amount":   self.goal_amount.get().strip(),
+            "months":   self.goal_months.get().strip(),
+            "purpose":  self.goal_purpose.get(),
+        }
+        self._saved_data["goal"] = goal_data
+        save_data(self._saved_data)
+
+        amount  = self._get_float(self.goal_amount)
+        months  = self._get_float(self.goal_months, 12)
+        purpose = self.goal_purpose.get()
+
+        self.goal_status.configure(
+            text=f"✅ Saved — RM {amount:,.0f} in {int(months)} months for: {purpose}",
+            text_color="green"
+        )
+        self.after(4000, lambda: self.goal_status.configure(
+            text="💾 Goal data saved", text_color="gray"))
 
     # ── Analysis ─────────────────────────────
     def _start_analysis(self):
@@ -477,7 +522,7 @@ class FinanceAdvisorApp(ctk.CTk):
         self.status_label.configure(text="")
         self.income_status.configure(text="")
         self.expenses_status.configure(text="")
-
+        self.goal_status.configure(text="")
 
 # ─────────────────────────────────────────
 # ENTRY POINT
