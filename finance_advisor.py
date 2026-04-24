@@ -113,7 +113,7 @@ ctk.set_default_color_theme("blue")
 class FinanceAdvisorApp(ctk.CTk):
     def __init__(self):
         super().__init__()
-        self.title("Finance AI — Powered by ilmu.ai")
+        self.title("BudgetBrain — Your Finance AI")
         self.geometry("1200x820")
         self.minsize(1000, 700)
         self._saved_data = load_saved_data()
